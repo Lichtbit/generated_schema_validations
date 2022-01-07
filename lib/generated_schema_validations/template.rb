@@ -14,9 +14,12 @@ module SchemaValidations
   end
 
   class_methods do
-    def schema_validations(exclude: [])
-      TABLE_VALIDATIONS
+    def schema_validations(exclude: [], schema_table_name: table_name)
+      self.schema_validations_excluded_columns += exclude
+      send("dbv_#{schema_table_name}_validations")
     end
+
+    TABLE_VALIDATIONS
 
     def validates_with_filter(attribute, options)
       return if attribute.to_sym.in?(schema_validations_excluded_columns)

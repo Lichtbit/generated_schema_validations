@@ -20,10 +20,8 @@ class GeneratedSchemaValidations::Table
   end
 
   def to_s
-    return '' if @validations.count == 0
-
     string = "\n"
-    string += "if table_name == #{table_name.inspect}\n"
+    string += "def dbv_#{table_name}_validations\n"
     if @possible_belongs_to_not_null_columns.present?
       string += "  belongs_to_presence_validations_for(#{@possible_belongs_to_not_null_columns.inspect})\n"
     end
