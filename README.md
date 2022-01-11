@@ -51,7 +51,7 @@ class User < ApplicationRecord
 end
 ```
 
-### Exclude from rubocp and simplecov
+### Exclude from rubocop and simplecov
 
 Add to simplecov config file (e.g. `.simplecov`):
 
