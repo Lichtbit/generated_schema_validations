@@ -54,6 +54,7 @@ module SchemaValidations
     def dbv_uniqueness_validations_for(unique_indexes, foreign_key:, column:)
       unique_indexes.each do |names|
         next unless foreign_key.in?(names)
+        next if column.to_sym.in?(schema_validations_excluded_columns)
 
         scope = (names - [foreign_key]).map(&:to_sym)
         options = { allow_nil: true }

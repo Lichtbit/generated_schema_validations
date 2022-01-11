@@ -95,6 +95,10 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.1.2
+
+* Exclude columns in unique validations
+
 ### 0.1.1
 
 * Add column type `binary`
