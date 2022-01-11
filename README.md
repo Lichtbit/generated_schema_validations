@@ -93,6 +93,12 @@ validate :stuff, numericality: true
 
 You can watch changes on `schema_validations.rb` to understand the generated validations.
 
+## Changelog
+
+### 0.1.1
+
+* Add column type `binary`
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/Lichtbit/generated_schema_validations.

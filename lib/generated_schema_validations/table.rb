@@ -86,6 +86,10 @@ class GeneratedSchemaValidations::Table
     null_validation(:boolean, name, column_options)
   end
 
+  def binary(name, column_options = {})
+    null_validation(:binary, name, column_options)
+  end
+
   def string(name, column_options = {})
     text(name, column_options)
   end
