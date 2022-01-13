@@ -76,10 +76,12 @@ class GeneratedSchemaValidations::Table
 
   def datetime(name, column_options = {})
     null_validation(:datetime, name, column_options)
+    validates name, :date_time_in_db_range
   end
 
   def date(name, column_options = {})
     null_validation(:date, name, column_options)
+    validates name, :date_in_db_range
   end
 
   def boolean(name, column_options = {})

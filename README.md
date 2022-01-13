@@ -95,6 +95,10 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### not released
+
+* Add validations of date and datetime columns to be in database range
+
 ### 0.1.2
 
 * Exclude columns in unique validations
