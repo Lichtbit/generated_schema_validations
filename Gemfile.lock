@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    generated_schema_validations (0.1.0)
+    generated_schema_validations (0.2.0)
 
 GEM
   remote: https://rubygems.org/

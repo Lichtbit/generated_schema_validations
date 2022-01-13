@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = 'generated_schema_validations'
-  spec.version       = '0.1.2'
+  spec.version       = '0.2.0'
   spec.authors       = ['Georg Limbach']
   spec.email         = ['georg.limbach@lichtbit.com']
 
