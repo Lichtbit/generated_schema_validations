@@ -27,7 +27,7 @@ To generate `app/models/concerns/schema_validations.rb`:
 
 ### Use validations
 
-Add to `app/mode/application_record.rb`:
+Add to `app/models/application_record.rb`:
 
 ```ruby
 class ApplicationRecord < ActiveRecord::Base
