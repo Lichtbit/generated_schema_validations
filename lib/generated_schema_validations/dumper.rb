@@ -11,10 +11,10 @@ class GeneratedSchemaValidations::Dumper
       raise 'The scheme is not well-formed.' if schema_content.include?('ActiveRecord')
 
       file.write(schema_content)
+      file.close
 
       load file.path
     ensure
-      file.close
       file.unlink
     end
   end
