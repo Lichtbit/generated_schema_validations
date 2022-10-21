@@ -7,7 +7,7 @@ class GeneratedSchemaValidations::Dumper
     file = Tempfile.new(['schema', '.rb'])
     begin
       schema_content = File.read(Rails.root.join('db/schema.rb'))
-      schema_content.gsub!('ActiveRecord::Schema', 'GeneratedSchemaValidations::Dumper')
+      schema_content.gsub!(/ActiveRecord::Schema(\[[^\]]+\])?/, 'GeneratedSchemaValidations::Dumper')
       raise 'The scheme is not well-formed.' if schema_content.include?('ActiveRecord')
 
       file.write(schema_content)

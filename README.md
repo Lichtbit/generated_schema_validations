@@ -95,6 +95,10 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.2.2
+
+* Enable rails 7.0 usage
+
 ### 0.2.1
 
 * Close tempfile before reading
