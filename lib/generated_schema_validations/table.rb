@@ -100,6 +100,14 @@ class GeneratedSchemaValidations::Table
     null_validation(:json, name, column_options)
   end
 
+  def jsonb(name, column_options = {})
+    null_validation(:jsonb, name, column_options)
+  end
+
+  def xml(name, column_options = {})
+    null_validation(:xml, name, column_options)
+  end
+
   def decimal(name, column_options = {})
     null_validation(:decimal, name, column_options)
     return if column_options[:array]
