@@ -13,6 +13,7 @@ class GeneratedSchemaValidations::Table
     @table_name = table_name
     @column_names = []
     @possible_belongs_to_not_null_columns = []
+    @bad_indexes = []
     @unique_indexes = []
     @validations = []
 
@@ -25,6 +26,7 @@ class GeneratedSchemaValidations::Table
     if @possible_belongs_to_not_null_columns.present?
       string += "  belongs_to_presence_validations_for(#{@possible_belongs_to_not_null_columns.inspect})\n"
     end
+    string += "  bad_uniqueness_validations_for(#{@bad_indexes.inspect})\n" if @bad_indexes.present?
     string += "  belongs_to_uniqueness_validations_for(#{@unique_indexes.inspect})\n" if @unique_indexes.present?
     string += "  uniqueness_validations_for(#{@unique_indexes.inspect})\n" if @unique_indexes.present?
     string += @validations.uniq.map { |v| "  #{v}\n" }.join
@@ -137,6 +139,10 @@ class GeneratedSchemaValidations::Table
     return unless index_options[:unique]
     return unless names.all? { |name| name.to_s.in?(@column_names) }
 
-    @unique_indexes.push(names.map(&:to_s))
+    if defined?(Rails::Railtie) && (Rails.env.development? || Rails.env.test?) && index_options[:where]
+      @bad_indexes.push(names.map(&:to_s))
+    else
+      @unique_indexes.push(names.map(&:to_s))
+    end
   end
 end

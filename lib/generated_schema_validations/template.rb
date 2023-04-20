@@ -25,9 +25,9 @@ module SchemaValidations
 
   class_methods do
     def schema_validations(exclude: [], schema_table_name: table_name)
-      self.schema_validations_excluded_columns += exclude
-      send("dbv_#{schema_table_name}_validations")
       self.schema_validations_called = true
+      self.schema_validations_excluded_columns += exclude.map(&:to_sym)
+      send("dbv_#{schema_table_name}_validations")
     end
 
     def skip_schema_validations
@@ -47,6 +47,17 @@ module SchemaValidations
         if not_null_columns.include?(association.foreign_key.to_sym)
           validates association.name, presence: true
           schema_validations_excluded_columns.push(association.foreign_key.to_sym)
+        end
+      end
+    end
+
+    def bad_uniqueness_validations_for(unique_indexes)
+      unique_indexes.each do |names|
+        names.each do |name|
+          next if name.to_sym.in?(schema_validations_excluded_columns)
+
+          raise "Unique index with where clause is outside the scope of this gem.\n\n" \
+                "You can exclude this column: `schema_validations exclude: [:#{name}]`"
         end
       end
     end
