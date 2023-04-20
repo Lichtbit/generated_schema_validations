@@ -95,6 +95,10 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### not released
+
+* Check usage of schema_validations (see #3)
+
 ### 0.2.3
 
 * Add `jsonb` and `xml` as possible field type

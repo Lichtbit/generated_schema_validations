@@ -11,12 +11,27 @@ module SchemaValidations
 
   included do
     class_attribute :schema_validations_excluded_columns, default: %i[id created_at updated_at type]
+    class_attribute :schema_validations_called, default: false
+
+    if defined?(Rails::Railtie) && (Rails.env.development? || Rails.env.test?)
+      TracePoint.trace(:end) do |t|
+        if t.self.respond_to?(:schema_validations_called) && t.self < ApplicationRecord &&
+           !t.self.schema_validations_called
+          raise "#{t.self}: schema_validations or skip_schema_validations missing"
+        end
+      end
+    end
   end
 
   class_methods do
     def schema_validations(exclude: [], schema_table_name: table_name)
       self.schema_validations_excluded_columns += exclude
       send("dbv_#{schema_table_name}_validations")
+      self.schema_validations_called = true
+    end
+
+    def skip_schema_validations
+      self.schema_validations_called = true
     end
 
     TABLE_VALIDATIONS
