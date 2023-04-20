@@ -95,7 +95,7 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
-### not released
+### 0.3.0
 
 * Check usage of schema_validations (see #3)
 * Force excluding unique validations with where clause (see #2)
