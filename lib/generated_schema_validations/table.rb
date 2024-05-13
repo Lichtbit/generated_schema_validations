@@ -7,6 +7,12 @@ class GeneratedSchemaValidations::Table
     end
   end
 
+  ValidationWithoutEnum = Struct.new(:attribute, :validator, :options) do
+    def to_s
+      "validates_with_filter #{attribute.to_sym.inspect}, #{{ validator => options }.inspect} unless enums.include?(#{attribute.to_sym.inspect})"
+    end
+  end
+
   attr_reader :table_name
 
   def initialize(table_name, &block)
@@ -22,7 +28,7 @@ class GeneratedSchemaValidations::Table
 
   def to_s
     string = "\n"
-    string += "def dbv_#{table_name}_validations\n"
+    string += "def dbv_#{table_name}_validations(enums: [])\n"
     if @possible_belongs_to_not_null_columns.present?
       string += "  belongs_to_presence_validations_for(#{@possible_belongs_to_not_null_columns.inspect})\n"
     end
@@ -35,6 +41,10 @@ class GeneratedSchemaValidations::Table
 
   def validates(attribute, validator, options = {})
     @validations.push(Validation.new(attribute, validator, options))
+  end
+
+  def validates_without_enum(attribute, validator, options = {})
+    @validations.push(ValidationWithoutEnum.new(attribute, validator, options))
   end
 
   def null_validation(datatype, name, column_options)
@@ -57,7 +67,7 @@ class GeneratedSchemaValidations::Table
   def bigint(name, column_options = {})
     null_validation(:bigint, name, column_options)
 
-    validates name, :numericality, allow_nil: true
+    validates_without_enum name, :numericality, allow_nil: true
   end
 
   def integer(name, column_options = {})
@@ -73,7 +83,7 @@ class GeneratedSchemaValidations::Table
       options[:less_than_or_equal_to] = integer_range.end
     end
 
-    validates name, :numericality, options
+    validates_without_enum name, :numericality, options
   end
 
   def datetime(name, column_options = {})

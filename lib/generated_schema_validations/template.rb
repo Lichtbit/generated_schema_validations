@@ -27,7 +27,7 @@ module SchemaValidations
     def schema_validations(exclude: [], schema_table_name: table_name)
       self.schema_validations_called = true
       self.schema_validations_excluded_columns += exclude.map(&:to_sym)
-      send("dbv_#{schema_table_name}_validations")
+      send("dbv_#{schema_table_name}_validations", enums: defined_enums.keys.map(&:to_sym))
     end
 
     def skip_schema_validations

@@ -36,12 +36,14 @@ class ApplicationRecord < ActiveRecord::Base
 end
 ```
 
-Use it in a model **after** you defined the associations:
+Use it in a model **after** you defined the associations and enums:
 
 ```ruby
 class User < ApplicationRecord
   belongs_to :client
   belongs_to :other
+
+  enum :actived, no: 0, yes: 1
 
   validate :email_address, email_format: true
 
@@ -94,6 +96,10 @@ validate :stuff, numericality: true
 You can watch changes on `schema_validations.rb` to understand the generated validations.
 
 ## Changelog
+
+### 0.3.1
+
+* Add exclusion for enum fields
 
 ### 0.3.0
 
