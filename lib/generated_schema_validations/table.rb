@@ -55,6 +55,8 @@ class GeneratedSchemaValidations::Table
     @possible_belongs_to_not_null_columns.push(name.to_sym) if datatype.in?(%i[bigint integer uuid])
     if datatype == :boolean
       validates name, :inclusion, in: [true, false], message: :blank
+    elsif datatype.in?(%i[json jsonb])
+      validates name, :exclusion, in: [nil], message: :blank
     else
       validates name, :presence
     end

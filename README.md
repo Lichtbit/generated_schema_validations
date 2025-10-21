@@ -97,6 +97,10 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.4
+
+* JSON and JSONB fields can have an empty hash and still be considered present
+
 ### 0.3.1
 
 * Add exclusion for enum fields
