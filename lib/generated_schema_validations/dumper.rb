@@ -2,12 +2,9 @@
 
 class GeneratedSchemaValidations::Dumper
   def self.generate
-    return unless Rails.env.development?
-
     file = Tempfile.new(['schema', '.rb'])
     begin
-      schema_content = File.read(Rails.root.join('db/schema.rb'))
-      schema_content.gsub!(/ActiveRecord::Schema(\[[^\]]+\])?/, 'GeneratedSchemaValidations::Dumper')
+      schema_content = read_schema_content.gsub(/ActiveRecord::Schema(\[[^\]]+\])?/, self.name)
       raise 'The scheme is not well-formed.' if schema_content.include?('ActiveRecord')
 
       file.write(schema_content)
@@ -17,6 +14,10 @@ class GeneratedSchemaValidations::Dumper
     ensure
       file.unlink
     end
+  end
+
+  def self.read_schema_content
+    File.read(Rails.root.join('db/schema.rb'))
   end
 
   def self.define(info = {}, &block)
@@ -33,6 +34,12 @@ class GeneratedSchemaValidations::Dumper
       line.strip.present? ? "#{indention_spaces}#{line}" : "\n"
     end.join
     template_ruby.gsub!("#{indention_spaces}TABLE_VALIDATIONS", table_validations_ruby)
+
+    write_schema_validations(template_ruby)
+  end
+
+  def write_schema_validations(template_ruby)
+    return unless Rails.env.development?
 
     File.write(Rails.root.join('app/models/concerns/schema_validations.rb'), template_ruby)
   end

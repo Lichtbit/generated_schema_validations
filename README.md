@@ -97,6 +97,17 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.5
+
+* Enables automatic testing after deployment using Capistrano to compare the online database with the local one and automatically warn of any differences.
+
+```ruby
+# Add to Capfile
+
+require 'generated_schema_validations/capistrano_tasks'
+
+```
+
 ### 0.4
 
 * JSON and JSONB fields can have an empty hash and still be considered present
