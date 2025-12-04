@@ -97,6 +97,10 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.5.1
+
+* raise info about where-unique conditions only in local envs
+
 ### 0.5
 
 * Enables automatic testing after deployment using Capistrano to compare the online database with the local one and automatically warn of any differences.

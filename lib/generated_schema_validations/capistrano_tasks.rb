@@ -13,7 +13,7 @@ namespace :generated_schema_validations do
       end
 
       local_file = 'app/models/concerns/schema_validations.rb'
-      local_content = File.read(local_file)
+      local_content = File.read(local_file).strip
 
       within release_path do
         with(
@@ -21,7 +21,7 @@ namespace :generated_schema_validations do
           rails_groups: fetch(:rails_assets_groups),
           disable_database_environment_check: 1
         ) do
-          dump_output = capture :rake, 'db:validation_dump_direct'
+          dump_output = capture(:rake, 'db:validation_dump_direct').strip
 
           if dump_output != local_content
             warn '❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌'

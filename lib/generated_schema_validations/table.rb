@@ -151,7 +151,7 @@ class GeneratedSchemaValidations::Table
     return unless index_options[:unique]
     return unless names.all? { |name| name.to_s.in?(@column_names) }
 
-    if defined?(Rails::Railtie) && (Rails.env.development? || Rails.env.test?) && index_options[:where]
+    if index_options[:where]
       @bad_indexes.push(names.map(&:to_s))
     else
       @unique_indexes.push(names.map(&:to_s))

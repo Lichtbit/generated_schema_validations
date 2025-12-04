@@ -55,6 +55,8 @@ module SchemaValidations
       unique_indexes.each do |names|
         names.each do |name|
           next if name.to_sym.in?(schema_validations_excluded_columns)
+          next unless defined?(Rails::Railtie)
+          next unless (Rails.env.development? || Rails.env.test?)
 
           raise "Unique index with where clause is outside the scope of this gem.\n\n" \
                 "You can exclude this column: `schema_validations exclude: [:#{name}]`"
