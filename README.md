@@ -97,6 +97,10 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.5.2
+
+* sort generated validates to ignore column order
+
 ### 0.5.1
 
 * raise info about where-unique conditions only in local envs

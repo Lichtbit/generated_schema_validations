@@ -27,6 +27,12 @@ class GeneratedSchemaValidations::Table
   end
 
   def to_s
+    # sort everything
+    @possible_belongs_to_not_null_columns.sort!
+    @bad_indexes.sort!
+    @unique_indexes.sort!
+    @validations.sort_by!(&:to_s)
+
     string = "\n"
     string += "def dbv_#{table_name}_validations(enums: [])\n"
     if @possible_belongs_to_not_null_columns.present?
