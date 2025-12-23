@@ -69,6 +69,14 @@ AllCops:
   - app/models/concerns/schema_validations.rb
 ```
 
+### Compare online database after deployment with capistrano
+
+```ruby
+# Add to Capfile
+
+require 'generated_schema_validations/capistrano_tasks'
+
+```
 
 ## Usage
 
@@ -96,6 +104,10 @@ validate :stuff, numericality: true
 You can watch changes on `schema_validations.rb` to understand the generated validations.
 
 ## Changelog
+
+### 0.5.3
+
+* adds support for Rails 7.2
 
 ### 0.5.2
 

@@ -3,7 +3,19 @@
 class GeneratedSchemaValidations::DumpChecker < GeneratedSchemaValidations::Dumper
   def self.read_schema_content
     stream = StringIO.new
-    ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+
+    if ActiveRecord::VERSION::STRING >= "7.2"
+      ActiveRecord::SchemaDumper.dump(
+        ActiveRecord::Base.connection_pool,
+        stream
+      )
+    else
+      ActiveRecord::SchemaDumper.dump(
+        ActiveRecord::Base.connection,
+        stream
+      )
+    end
+
     stream.rewind
     stream.read
   end
