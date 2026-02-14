@@ -105,6 +105,11 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.5.4
+
+* adds support for time fields
+* fix errors on overflowing column values
+
 ### 0.5.3
 
 * adds support for Rails 7.2

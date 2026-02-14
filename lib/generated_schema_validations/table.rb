@@ -104,6 +104,11 @@ class GeneratedSchemaValidations::Table
     validates name, :date_in_db_range
   end
 
+  def time(name, column_options = {})
+    null_validation(:time, name, column_options)
+    validates name, :time_in_db_range
+  end
+
   def boolean(name, column_options = {})
     null_validation(:boolean, name, column_options)
   end

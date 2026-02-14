@@ -106,7 +106,7 @@ module SchemaValidations
       return unless value.is_a?(DateTime) || value.is_a?(Time)
       return if value.year.between?(-4711, 294_275) # see https://www.postgresql.org/docs/9.3/datatype-datetime.html
 
-      record.errors.add(attr_name, :invalid, options)
+      record.errors.add(attr_name, :invalid)
     end
   end
 
@@ -116,7 +116,23 @@ module SchemaValidations
       return unless value.is_a?(Date)
       return if value.year.between?(-4711, 5_874_896) # see https://www.postgresql.org/docs/9.3/datatype-datetime.html
 
-      record.errors.add(attr_name, :invalid, options)
+      record.errors.add(attr_name, :invalid)
+    end
+  end
+
+  class TimeInDbRangeValidator < ActiveModel::EachValidator
+    def validate_each(record, attr_name, value)
+      return if value.nil?
+
+      unless value.is_a?(Time) || value.is_a?(ActiveSupport::TimeWithZone)
+        record.errors.add(attr_name, :invalid)
+        return
+      end
+
+      # PostgreSQL allows only times in one day
+      return if value.to_date == Date.new(2000, 1, 1)
+
+      record.errors.add(attr_name, :invalid)
     end
   end
 end
