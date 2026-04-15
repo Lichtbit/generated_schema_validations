@@ -105,6 +105,10 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.5.5
+
+* ignore geography fields
+
 ### 0.5.4
 
 * adds support for time fields

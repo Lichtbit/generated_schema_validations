@@ -168,4 +168,8 @@ class GeneratedSchemaValidations::Table
       @unique_indexes.push(names.map(&:to_s))
     end
   end
+
+  def geography(*)
+    # do nothing
+  end
 end
