@@ -9,14 +9,26 @@
 module SchemaValidations
   extend ActiveSupport::Concern
 
+  mattr_accessor :relaxed, default: false
+
+  def self.relaxed!
+    self.relaxed = true
+  end
+
+  def self.relaxed?
+    relaxed
+  end
+
   included do
     class_attribute :schema_validations_excluded_columns, default: %i[id created_at updated_at type]
     class_attribute :schema_validations_called, default: false
 
     if defined?(Rails::Railtie) && (Rails.env.development? || Rails.env.test?)
       TracePoint.trace(:end) do |t|
-        if t.self.respond_to?(:schema_validations_called) && t.self < ApplicationRecord &&
-           !t.self.schema_validations_called
+        if t.self.respond_to?(:schema_validations_called) &&
+            t.self < ApplicationRecord &&
+            !t.self.schema_validations_called &&
+            !SchemaValidations.relaxed?
           raise "#{t.self}: schema_validations or skip_schema_validations missing"
         end
       end
@@ -27,7 +39,12 @@ module SchemaValidations
     def schema_validations(exclude: [], schema_table_name: table_name)
       self.schema_validations_called = true
       self.schema_validations_excluded_columns += exclude.map(&:to_sym)
-      send("dbv_#{schema_table_name}_validations", enums: defined_enums.keys.map(&:to_sym))
+
+      if SchemaValidations.relaxed?
+        try("dbv_#{schema_table_name}_validations", enums: defined_enums.keys.map(&:to_sym))
+      else
+        send("dbv_#{schema_table_name}_validations", enums: defined_enums.keys.map(&:to_sym))
+      end
     end
 
     def skip_schema_validations

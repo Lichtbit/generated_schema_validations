@@ -105,6 +105,18 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.6.0
+
+* add a relaxed mode for model validations in migrations
+
+```ruby
+create_table :new_model do |t|
+  t.timestamps null: false
+end
+SchemaValidations.relaxed!
+NewModel.create!
+```
+
 ### 0.5.5
 
 * ignore geography fields
