@@ -105,6 +105,10 @@ You can watch changes on `schema_validations.rb` to understand the generated val
 
 ## Changelog
 
+### 0.6.1
+
+* adds support for Rails 8.1 (integer range validations no longer use the private `ActiveRecord::Type::Integer#range`, which was removed in Rails 8.1)
+
 ### 0.6.0
 
 * add a relaxed mode for model validations in migrations

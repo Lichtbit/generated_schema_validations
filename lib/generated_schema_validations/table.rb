@@ -83,13 +83,10 @@ class GeneratedSchemaValidations::Table
 
     return if column_options[:array]
 
-    integer_range = ::ActiveRecord::Type::Integer.new.send(:range)
-    options = { allow_nil: true, only_integer: true, greater_than_or_equal_to: integer_range.begin }
-    if integer_range.exclude_end?
-      options[:less_than] = integer_range.end
-    else
-      options[:less_than_or_equal_to] = integer_range.end
-    end
+    # Same bounds as ActiveModel::Type::Integer (min...max), computed here because
+    # Rails 8.1 removed the private #range method this used to call.
+    max_value = 1 << ((::ActiveRecord::Type::Integer::DEFAULT_LIMIT * 8) - 1)
+    options = { allow_nil: true, only_integer: true, greater_than_or_equal_to: -max_value, less_than: max_value }
 
     validates_without_enum name, :numericality, options
   end
