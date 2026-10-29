@@ -2,8 +2,10 @@
 
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in generated_schema_validations.gemspec
 gemspec
 
-gem 'rake', '~> 12.0'
-gem 'rspec', '~> 3.0'
+gem 'pg', '~> 1.6'
+gem 'rake', '~> 13.0'
+gem 'rspec', '~> 3.13'
+gem 'rubocop', '~> 1.81', require: false
+gem 'sqlite3', '>= 2.1'

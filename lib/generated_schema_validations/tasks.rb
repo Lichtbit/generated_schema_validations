@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Rake::Task['db:schema:dump'].enhance do
+  # The validations are generated from db/schema.rb, so there is nothing to do with structure.sql.
+  next unless (ENV['SCHEMA_FORMAT'] || ActiveRecord.schema_format).to_s == 'ruby'
+
   require 'generated_schema_validations'
   require_relative 'dumper'
   require_relative 'table'

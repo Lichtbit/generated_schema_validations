@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  rspec:
+    name: Ruby ${{ matrix.ruby }}, ${{ matrix.gemfile }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ['3.2', '3.3', '3.4', '4.0']
+        gemfile: [gemfiles/rails_7.2.gemfile, gemfiles/rails_8.0.gemfile, Gemfile]
+    env:
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: SQLite
+        run: bundle exec rspec
+      - name: PostgreSQL
+        run: bundle exec rspec
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost/postgres
+
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '4.0'
+          bundler-cache: true
+      - run: bundle exec rubocop

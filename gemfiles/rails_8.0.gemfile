@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+eval_gemfile '../Gemfile'
+
+gem 'activerecord', '~> 8.0.0'
+gem 'railties', '~> 8.0.0'
+
+# Active Support 8.0 passes the removed quirks_mode option to JSON.generate
+gem 'json', '< 3'

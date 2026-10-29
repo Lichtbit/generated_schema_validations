@@ -19,11 +19,13 @@ namespace :generated_schema_validations do
         with(
           rails_env: fetch(:rails_env),
           rails_groups: fetch(:rails_assets_groups),
-          disable_database_environment_check: 1
+          disable_database_environment_check: 1,
         ) do
           dump_output = capture(:rake, 'db:validation_dump_direct').strip
 
-          if dump_output != local_content
+          if dump_output == local_content
+            info '✔ Schema OK'
+          else
             warn '❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌'
             warn 'The online version of the automatically generated validations differs from the local version.'
             warn 'Please check immediately.'
@@ -41,7 +43,7 @@ namespace :generated_schema_validations do
                 diffs.each do |piece|
                   hunk = Diff::LCS::Hunk.new(
                     old_lines, new_lines, piece,
-                    3,  # context lines
+                    3, # context lines
                     file_length_difference
                   )
 
@@ -54,8 +56,6 @@ namespace :generated_schema_validations do
               end
             end
             warn '❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌'
-          else
-            info '✔ Schema OK'
           end
         end
       end

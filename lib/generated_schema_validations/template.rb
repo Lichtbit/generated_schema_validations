@@ -26,9 +26,10 @@ module SchemaValidations
     if defined?(Rails::Railtie) && (Rails.env.development? || Rails.env.test?)
       TracePoint.trace(:end) do |t|
         if t.self.respond_to?(:schema_validations_called) &&
-            t.self < ApplicationRecord &&
-            !t.self.schema_validations_called &&
-            !SchemaValidations.relaxed?
+           t.self < ApplicationRecord &&
+           !t.self.abstract_class? &&
+           !t.self.schema_validations_called &&
+           !SchemaValidations.relaxed?
           raise "#{t.self}: schema_validations or skip_schema_validations missing"
         end
       end
@@ -73,7 +74,7 @@ module SchemaValidations
         names.each do |name|
           next if name.to_sym.in?(schema_validations_excluded_columns)
           next unless defined?(Rails::Railtie)
-          next unless (Rails.env.development? || Rails.env.test?)
+          next unless Rails.env.development? || Rails.env.test?
 
           raise "Unique index with where clause is outside the scope of this gem.\n\n" \
                 "You can exclude this column: `schema_validations exclude: [:#{name}]`"
@@ -117,39 +118,5 @@ module SchemaValidations
     end
   end
 
-  class DateTimeInDbRangeValidator < ActiveModel::EachValidator
-    def validate_each(record, attr_name, value)
-      return if value.nil?
-      return unless value.is_a?(DateTime) || value.is_a?(Time)
-      return if value.year.between?(-4711, 294_275) # see https://www.postgresql.org/docs/9.3/datatype-datetime.html
-
-      record.errors.add(attr_name, :invalid)
-    end
-  end
-
-  class DateInDbRangeValidator < ActiveModel::EachValidator
-    def validate_each(record, attr_name, value)
-      return if value.nil?
-      return unless value.is_a?(Date)
-      return if value.year.between?(-4711, 5_874_896) # see https://www.postgresql.org/docs/9.3/datatype-datetime.html
-
-      record.errors.add(attr_name, :invalid)
-    end
-  end
-
-  class TimeInDbRangeValidator < ActiveModel::EachValidator
-    def validate_each(record, attr_name, value)
-      return if value.nil?
-
-      unless value.is_a?(Time) || value.is_a?(ActiveSupport::TimeWithZone)
-        record.errors.add(attr_name, :invalid)
-        return
-      end
-
-      # PostgreSQL allows only times in one day
-      return if value.to_date == Date.new(2000, 1, 1)
-
-      record.errors.add(attr_name, :invalid)
-    end
-  end
+  VALIDATOR_CLASSES
 end
